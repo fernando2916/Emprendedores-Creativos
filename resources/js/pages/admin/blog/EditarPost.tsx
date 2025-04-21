@@ -7,6 +7,7 @@ import { LoaderCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FormEventHandler } from "react";;
 import { useSlug } from '@/hooks/use-string-slug';
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 
 type Props = {
   post: {
@@ -48,7 +49,9 @@ export default function EditarPost({categorias, post}: Props) {
  const submit: FormEventHandler = (e) => {
      e.preventDefault();
  
-     put(route('blog.update', post.id))
+     put(route('blog.update', post.id), {
+      forceFormData: true,
+     })
    }
 
 
@@ -66,12 +69,12 @@ export default function EditarPost({categorias, post}: Props) {
         />
 
         <div className="flex mt-8">
-          <h2 className="text-3xl font-bold">Nuevo post</h2>
+          <h2 className="text-3xl font-bold">Editar post</h2>
         </div>
         <div className="flex flex-col mt-10">
           <Card className="rounded-xl">
             <CardContent className="p-10">
-            <form className="space-y-4" noValidate onSubmit={submit}>
+            <form className="space-y-4" noValidate onSubmit={submit} encType="multipart/form-data">
               <div className="flex flex-col gap-2">
                 <label htmlFor="titulo" className="font-medium text-sm after:content-['*'] after:ml-0.5 after:text-red-500">Titulo</label>
                 <input 
@@ -90,10 +93,12 @@ export default function EditarPost({categorias, post}: Props) {
                   value={data.titulo}
                  />
               </div>
+              
 
               <FileInput 
               fileName={data.imagen?.name}
-              onChange={(file) => setData("imagen", file)} // Corrección del operador =>
+              onChange={(file) => setData("imagen", file)}
+              defaultImage={typeof post.imagen === "string" ? `/storage/${post.imagen}` : undefined} // Corrección del operador =>
               />
               {errors.imagen && <p className="text-sm text-red-500">{errors.imagen}</p>}
 
@@ -136,22 +141,9 @@ export default function EditarPost({categorias, post}: Props) {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label htmlFor="contenido" className="font-medium text-sm after:content-['*'] after:ml-0.5 after:text-red-500">Contenido</label>
-                <textarea 
-                  name="contenido"
-                  id="contenido"
-                  placeholder="Contenido del post"
-                  className={
-                    errors.contenido
-                      ? 'border-alerts-500 focus:shadow-alerts-500 rounded-md border-2 bg-transparent p-2 outline-none placeholder:text-black focus:shadow-md dark:placeholder:text-gray-400'
-                      : 'disabled:bg-nav-900 disabled:border-nav-900 border-link-100 focus:shadow-link-200 w-full rounded-md border-2 bg-transparent p-2 outline-none placeholder:text-black focus:shadow-md dark:placeholder:text-gray-400'
-                  }
-                  required
-                  tabIndex={4}
-                  onChange={(e) => setData("contenido", e.target.value)}
-                  value={data.contenido}
-                 />
-              </div>
+                              <label htmlFor="contenido" className="font-medium text-sm after:content-['*'] after:ml-0.5 after:text-red-500">Contenido</label>
+                            <SimpleEditor value={data.contenido} onChange={(value) => setData("contenido", value)}/>
+                            </div>
 
               <div className="flex flex-col gap-2">
                 <label htmlFor="tiempo" className="font-medium text-sm after:content-['*'] after:ml-0.5 after:text-red-500">Tiempo de lectura</label>

@@ -1,16 +1,23 @@
 import { cn } from "@/lib/utils"
-import {  useRef, useState } from "react"
+import {  useEffect, useRef, useState } from "react"
 import { FaUpload } from "react-icons/fa"
 
 interface FileInputProps {
   onChange: (file: File | null) => void
   fileName?: string
+  defaultImage?: string
 }
 
-export default function FileInput({onChange, fileName}: FileInputProps) {
+export default function FileInput({onChange, fileName, defaultImage}: FileInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [dragOver, setDragOver] = useState(false)
+
+  useEffect(() => {
+    if(defaultImage && !previewUrl) {
+      setPreviewUrl(defaultImage)
+    }
+  }, [defaultImage, previewUrl])
 
   const handleFile = (file: File | null) => {
     onChange(file)

@@ -53,7 +53,15 @@ export const columns: ColumnDef<Post>[] = [
     },
     {
       accessorKey: 'imagen',
-      header: 'Imagen'
+      header: 'Imagen',
+      cell: ({ row }) => {
+        const post = row.original;
+        return (
+          <div className="flex justify-center items-center">
+            <img src={`/storage/${post.imagen}`} alt={post.titulo} className="w-20 h-20 object-cover rounded-md" />
+          </div>
+        );
+      }
     },
     {
       accessorKey: 'descripcion_corta',
@@ -65,7 +73,15 @@ export const columns: ColumnDef<Post>[] = [
     },
     {
       accessorKey: 'contenido',
-      header: 'Contenido'
+      header: 'Contenido',
+      cell: ({ row }) => {
+        const post = row.original;
+        return (
+          <div className="flex justify-center items-center">
+            <p className="text-sm text-center post-content">{post.contenido}</p>
+          </div>
+        );
+      }
     },
     {
       accessorKey: 'tiempo_de_lectura',
@@ -136,14 +152,14 @@ export const columns: ColumnDef<Post>[] = [
                     router.delete(`/admin/blog/${postId}`, {
                       onSuccess: () => {
                         Swal.fire({
-                          title: "Categoria Eliminada",
+                          title: "Post Eliminado",
                           background: "#120024",
                           color: "#ffffff",
                           icon: "success",
                         });
                       },
                       onError: () => {
-                        Swal.fire("Error", "Hubo un problema al eliminar la categoria", "error");
+                        Swal.fire("Error", "Hubo un problema al eliminar el post", "error");
                       },
                     });
                   }

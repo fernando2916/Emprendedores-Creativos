@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Categorias;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -41,7 +42,7 @@ class PostController extends Controller
 
         $data = $request->validate([
            'titulo' => 'required|string|max:255',
-           // 'imagen' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+           'imagen' => 'nullable|image|mimes:jpeg,png|max:2048',
            'descripcion_corta' => 'required|string',
            'slug' => 'required|string|max:255|unique:posts,slug',
            'contenido' => 'required|string',
@@ -51,6 +52,11 @@ class PostController extends Controller
        ]);
        
        $data['users_id'] = auth('web')->id();
+
+       if ($request->hasFile('imagen')) {
+        
+       $data['imagen'] = Storage::put('posts', $request->imagen);
+       }
        // $path = $request->file('imagen')->store('posts', 'public');
 
        Post::create($data);
@@ -86,18 +92,24 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         $data = $request->validate([
-            'titulo' => 'required|string|max:255',
-            // 'imagen' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'descripcion_corta' => 'required|string',
-            'slug' => 'required|string|max:255|unique:posts,slug,' . $post->id,
-            'contenido' => 'required|string',
-            'tiempo_de_lectura' => 'required|integer',
-            'estado' => 'required|string',
-            'categorias_id' => 'required|exists:categorias,id',
+            'titulo' => 'nullable|string|max:255',
+            'imagen' => 'nullable|image|max:2048',
+            'descripcion_corta' => 'nullable|string',
+           'slug' => 'nullable|string|max:255|unique:posts,slug,' . $post->id . ',id',
+            'contenido' => 'nullable|string',
+            'tiempo_de_lectura' => 'nullable|integer',
+            'estado' => 'nullable|string',
+            'categorias_id' => 'nullable|exists:categorias,id',
         ]);
+        
+        if ($request->hasFile('imagen')) {
+            if($post->imagen) {
+                Storage::delete($post->imagen);
+            }
+            $data['imagen'] = Storage::put('posts', $request->imagen);
+            }
 
         $post->update($data);
-        // Post::updated($data);
 
         return to_route('blog')->with('message', 'Post actualizado correctamente');
     }
@@ -107,6 +119,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return to_route('blog')->with('message', 'Post eliminado correctamente');
     }
 }

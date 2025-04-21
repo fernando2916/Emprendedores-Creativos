@@ -50,7 +50,9 @@ const CrearPost: FC<PageProps> = ({categorias}) => {
  const submit: FormEventHandler = (e) => {
      e.preventDefault();
  
-     post(route('blog.store'))
+     post(route('blog.store'), {
+      forceFormData: true
+     })
    }
 
 
@@ -62,7 +64,7 @@ const CrearPost: FC<PageProps> = ({categorias}) => {
 
       <Indicador
         Nombre="Blog"
-        href="/blog/crear"
+        href="/admin/blog"
         Pantalla="Crear Post"
         path="/admin/blog/crear" 
         />
@@ -73,7 +75,7 @@ const CrearPost: FC<PageProps> = ({categorias}) => {
         <div className="flex flex-col mt-10">
           <Card className="rounded-xl">
             <CardContent className="p-5">
-            <form className="space-y-4" noValidate onSubmit={submit}>
+            <form className="space-y-4" noValidate onSubmit={submit} encType="multipart/form-data">
               <div className="flex flex-col gap-2">
                 <label htmlFor="titulo" className="font-medium text-sm after:content-['*'] after:ml-0.5 after:text-red-500">Titulo</label>
                 <input 

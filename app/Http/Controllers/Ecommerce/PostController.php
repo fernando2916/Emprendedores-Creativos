@@ -27,6 +27,7 @@ class PostController extends Controller
         $post = Post::where('slug', $slug)
             ->with(['categoria', 'autor'])
             ->firstOrFail();
+            
         return Inertia::render('ecommerce/blog/PostId', [
             'post' => $post,
         ]);

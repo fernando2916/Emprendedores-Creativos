@@ -26,9 +26,8 @@ export const Posts: FC<PostCardProps> = ({ data }) => {
                             <article className="dark:bg-cont-100 bg-slate-400 text-white">
                                 <div className="relative">
                                     <img
-                                        src="/Equipo.webp"
+                                         src={`/storage/${post.imagen}`} alt={`/storage/${post.titulo}`}
                                         className=" aspect-video w-full object-cover "
-                                        alt="imagen en espera"
                                         width={500}
                                         height={500}
                                     />
