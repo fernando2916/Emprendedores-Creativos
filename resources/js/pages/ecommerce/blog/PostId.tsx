@@ -89,11 +89,9 @@ export default function PostId() {
           </section>
           <section className="pb-12" aria-labelledby="commets-title">
               <div className="mx-auto grid w-full max-w-[1200px] grid-cols-10 gap-8 px-1">
-                  <div className="px-6 lg:col-span-7">
-                      <div className="">
+                  <div className="px-6 lg:col-span-7 col-span-full">
                           <p className="text-2xl font-semibold">Comentarios</p>
-                          <div className="">
-                              <div className="dark:bg-cont-100 mt-2 rounded-md bg-slate-400 p-5 text-white">
+                              <div className="dark:bg-cont-100 mt-2 rounded-md bg-slate-400 p-5 text-white w-full">
                                   Comentario
                                   <div className="flex items-center gap-3 text-lg">
                                       <div className="mt-5 flex items-center gap-2">
@@ -109,8 +107,6 @@ export default function PostId() {
                                       </div>
                                   </div>
                               </div>
-                          </div>
-                      </div>
                   </div>
                   <div className="col-span-full px-6 lg:col-span-7">
                       {auth.user ? (
